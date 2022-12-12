@@ -41,3 +41,112 @@ Once you have a complete database, perform these steps:
 7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
 
 8. List the frequency count of employee last names (i.e., how many employees share each last name) in descending order.
+
+
+###### ERD ######
+# Phsical Model
+
+Titles
+-
+title_id VARCHAR(5) PK
+title VARCHAR(50)
+
+Salaries
+-
+emp_no INT PK
+salary INT
+
+Employees
+-
+emp_no INT PK FK >- Salaries.emp_no
+emp_title_id VARCHAR(5) FK >- Titles.title_id
+birth_date VARCHAR(10)
+first_name VARCHAR(100)
+last_name VARCHAR(100)
+sex VARCHAR(1)
+hire_date VARCHAR(10)
+
+Dept_Manager
+-
+dept_no VARCHAR(4) PK FK >- Dept_Emp.dept_no
+emp_no INT FK >- Employees.emp_no
+
+Dept_Emp
+-
+emp_no INT FK >- Employees.emp_no
+dept_no VARCHAR(4) FK >- Departments.dept_no
+
+Departments
+-
+dept_no VARCHAR(4) PK FK >- Dept_Manager.dept_no
+dept_name VARCHAR(100)
+
+# -----------------------------
+CREATE TABLE Titles (
+    title_id VARCHAR(5)   NOT NULL,
+    title VARCHAR(50)   NOT NULL,
+    CONSTRAINT pk_Titles PRIMARY KEY (
+        title_id
+     )
+);
+
+CREATE TABLE Salaries (
+    emp_no INT   NOT NULL,
+    salary INT   NOT NULL,
+    CONSTRAINT pk_Salaries PRIMARY KEY (
+        emp_no
+     )
+);
+
+CREATE TABLE Employees (
+    emp_no INT   NOT NULL,
+    emp_title_id VARCHAR(5)   NOT NULL,
+    birth_date VARCHAR(10)   NOT NULL,
+    first_name VARCHAR(100)   NOT NULL,
+    last_name VARCHAR(100)   NOT NULL,
+    sex VARCHAR(1)   NOT NULL,
+    hire_date VARCHAR(10)   NOT NULL,
+    CONSTRAINT pk_Employees PRIMARY KEY (
+        emp_no
+     )
+);
+
+CREATE TABLE Dept_Manager (
+    dept_no VARCHAR(4)   NOT NULL,
+    emp_no INT   NOT NULL,
+    CONSTRAINT pk_Dept_Manager PRIMARY KEY (
+        dept_no
+     )
+);
+
+CREATE TABLE Dept_Emp (
+    emp_no INT   NOT NULL,
+    dept_no VARCHAR(4)   NOT NULL
+);
+
+CREATE TABLE Departments (
+    dept_no VARCHAR(4)   NOT NULL,
+    dept_name VARCHAR(100)   NOT NULL,
+    CONSTRAINT pk_Departments PRIMARY KEY (
+        dept_no
+     )
+);
+
+ALTER TABLE Employees ADD CONSTRAINT fk_Employees_emp_no FOREIGN KEY(emp_no)
+REFERENCES Salaries (emp_no);
+
+ALTER TABLE Employees ADD CONSTRAINT fk_Employees_emp_title_id FOREIGN KEY(emp_title_id)
+REFERENCES Titles (title_id);
+
+
+ALTER TABLE Dept_Manager ADD CONSTRAINT fk_Dept_Manager_emp_no FOREIGN KEY(emp_no)
+REFERENCES Employees (emp_no);
+
+ALTER TABLE Dept_Emp ADD CONSTRAINT fk_Dept_Emp_emp_no FOREIGN KEY(emp_no)
+REFERENCES Employees (emp_no);
+
+ALTER TABLE Dept_Emp ADD CONSTRAINT fk_Dept_Emp_dept_no FOREIGN KEY(dept_no)
+REFERENCES Departments (dept_no);
+
+ALTER TABLE Departments ADD CONSTRAINT fk_Departments_dept_no FOREIGN KEY(dept_no)
+REFERENCES Dept_Manager (dept_no);
