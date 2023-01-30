@@ -27,9 +27,8 @@ Inspect the CSVs and sketch out an ERD of the tables. Feel free to use a tool li
 Once you have a complete database, perform these steps:
 
 1. List the following details of each employee: employee number, last name, first name, sex, and salary.
-
-    
-
+ 
+```python
 SELECT 
 	e.emp_no,
 	e.last_name,
@@ -39,9 +38,11 @@ SELECT
 FROM employees e
 	INNER JOIN salaries s
 		ON e.emp_no = s.emp_no
+```
 
 2. List first name, last name, and hire date for employees who were hired in 1986.
 
+```python
 SELECT
 	first_name,
 	last_name,
@@ -50,9 +51,11 @@ FROM
 	employees
 WHERE EXTRACT(YEAR FROM hire_date) = 1986
 ORDER BY hire_date ASC;
+```
 
 3. List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
 
+```python
 SELECT 
 	d.dept_no,
 	d.dept_name,
@@ -64,10 +67,11 @@ FROM departments d
 		ON d.dept_no = dm.dept_no
 	INNER JOIN employees e
 		ON dm.emp_no = e.emp_no
-
+```
 
 4. List the department of each employee with the following information: employee number, last name, first name, and department name.
 
+```python
 SELECT 
 	de.emp_no,
 	e.last_name,
@@ -78,9 +82,10 @@ FROM dept_emp AS de
 		ON de.emp_no =  e.emp_no
 	INNER JOIN departments AS d
 		ON d.dept_no = de.dept_no
+```
 
 5. List first name, last name, and sex for employees whose first name is "Hercules" and last names begin with "B."
-
+```python
 SELECT 
 	first_name,
 	last_name,
@@ -90,9 +95,11 @@ FROM
 WHERE 
 	first_name = 'Hercules' AND
 	last_name LIKE 'B%'
+```
 
 6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
 
+```python
 SELECT 
 	de.emp_no,
 	e.last_name,
@@ -104,10 +111,11 @@ FROM dept_emp AS de
 	INNER JOIN departments AS d
 		ON d.dept_no = de.dept_no
 WHERE d.dept_name = 'Sales'
-
+```
 
 7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
 
+```python
 SELECT 
 	de.emp_no,
 	e.last_name,
@@ -120,9 +128,10 @@ FROM dept_emp AS de
 		ON d.dept_no = de.dept_no
 WHERE d.dept_name = 'Sales' OR 
 	d.dept_name = 'Development'
-
+```
 8. List the frequency count of employee last names (i.e., how many employees share each last name) in descending order.
 
+```python
 SELECT 
 	last_name,
 	COUNT(last_name) AS "Total Count"
@@ -130,12 +139,12 @@ FROM
 	employees
 GROUP BY last_name
 ORDER BY "Total Count" DESC
-
+```
 
 
 
 ###### ERD ######
-![](Screenshot%202023-01-30%20145835.jpg)
+![](SQLChallengeERD.jpg)
 
 # Phsical Model
 
@@ -174,7 +183,8 @@ Departments
 dept_no VARCHAR(4) PK FK >- Dept_Manager.dept_no
 dept_name VARCHAR(100)
 
-# -----------------------------
+# TABLE SCHEMA-----------------------------
+```pyton
 CREATE TABLE Titles (
     title_id VARCHAR(5)   NOT NULL,
     title VARCHAR(50)   NOT NULL,
@@ -194,11 +204,11 @@ CREATE TABLE Salaries (
 CREATE TABLE Employees (
     emp_no INT   NOT NULL,
     emp_title_id VARCHAR(5)   NOT NULL,
-    birth_date VARCHAR(10)   NOT NULL,
+    birth_date DATE   NOT NULL,
     first_name VARCHAR(100)   NOT NULL,
     last_name VARCHAR(100)   NOT NULL,
     sex VARCHAR(1)   NOT NULL,
-    hire_date VARCHAR(10)   NOT NULL,
+    hire_date DATE   NOT NULL,
     CONSTRAINT pk_Employees PRIMARY KEY (
         emp_no
      )
@@ -224,7 +234,7 @@ CREATE TABLE Departments (
         dept_no
      )
 );
-
+```
 ALTER TABLE Employees ADD CONSTRAINT fk_Employees_emp_no FOREIGN KEY(emp_no)
 REFERENCES Salaries (emp_no);
 
